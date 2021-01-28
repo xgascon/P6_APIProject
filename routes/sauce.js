@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const auth = require('../middleware/auth');
-const multer = require('../middleware/multer-config');
+const auth = require('../middleware/auth');/* import code to manage tokens */
+const multer = require('../middleware/multer-config');/* import code to manage images */
 
-const stuffCtrl = require('../controllers/sauce');
+const stuffCtrl = require('../controllers/sauce');/* import codes from 'sauce' file */
 
 router.get('/', auth, stuffCtrl.getAllSauce);
 router.post('/', auth, multer, stuffCtrl.createSauce);
