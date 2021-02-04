@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');/* package bcrypt to hash elements */
 const jwt = require('jsonwebtoken');/* jsonwebtoken plugin enabling to generate tokens for autentication purposes */
+var CryptoJS = require("crypto-js");/* plugin to crypt email */
 const passwordValidator = require('password-validator');/* plugin for password validation */
-
 const User = require('../models/User');/* import the user schema */
 
 // Setting up the password validation
@@ -22,7 +22,7 @@ exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)/* hashing the password for security purposes */
       .then(hash => {
         const user = new User({
-          email: req.body.email,
+          email: CryptoJS.HmacSHA1(req.body.email, "Key").toString(), /* email Encryption */
           password: hash
         });
         user.save()
@@ -35,7 +35,11 @@ exports.signup = (req, res, next) => {
 
 // Logging in controller
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })/* looking for an email in database that would match the email logged in */
+  var emailUserConnect = CryptoJS.HmacSHA1(req.body.email, "Key").toString(); /* email encryption to compare with email in DBase */
+  console.log(emailUserConnect);
+
+  User.findOne({ email: emailUserConnect })/* looking for an email in database that would match the email logged in */
+    
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });          
