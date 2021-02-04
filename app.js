@@ -1,7 +1,7 @@
 // Adding the framework Express to the project
 const express = require('express');
 const app = express();
-
+const dotenv = require('dotenv') /* package to manage dotenv with the mongoDB connection */
 const bodyParser = require('body-parser');/* package enabling to extract JSON objects from queries */
 const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauce');
@@ -18,8 +18,11 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());/* extracting JSON objects from queries */
 
+//  initiate dotenv and make environment variables available throughout the application
+dotenv.config();
+
 // Connecting to MongoDB database
-mongoose.connect('mongodb+srv://SoPekocko_oc:sopekocko@cluster0.e4c0v.mongodb.net/SoPekocko?retryWrites=true&w=majority',
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.e4c0v.mongodb.net/SoPekocko?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
